@@ -17,6 +17,10 @@ def index():
     """Serve a página principal da aplicação."""
     return send_from_directory('.', 'index.html')
 
+if __name__ == '__main__':
+    app.run()
+
+
 # --- API para Usuários (Login/Registro) ---
 @app.route('/api/register', methods=['POST'])
 def register():
