@@ -2,19 +2,33 @@ from flask import Flask, jsonify, request, send_from_directory
 import sqlite3
 from werkzeug.security import generate_password_hash, check_password_hash
 import mercadopago
+import os
+from database import criar_banco # Importa a função do outro arquivo
 
-app = Flask(__name__, static_folder='.', static_url_path='')
+app = Flask(_name_, static_folder='.', static_url_path='')
+
+# --- ALTERAÇÕES PARA RENDER ---
+# 1. Define o caminho do banco de dados usando o Disco Persistente do Render
+DB_PATH = os.environ.get("DB_PATH", ".") 
+DB_FILE = os.path.join(DB_PATH, "smart_fridge.db")
+
+# 2. Pega o token do Mercado Pago de uma variável de ambiente segura
+MERCADO_PAGO_TOKEN = os.environ.get("MERCADO_PAGO_TOKEN")
+
+# 3. Garante que o banco de dados seja criado na primeira vez que o servidor iniciar
+criar_banco()
 
 def get_db_connection():
     """Cria uma conexão com o banco de dados."""
-    conn = sqlite3.connect('smart_fridge.db')
-    conn.row_factory = sqlite3.Row # Isso permite acessar colunas por nome
+    conn = sqlite3.connect(DB_FILE)
+    conn.row_factory = sqlite3.Row
     return conn
 
 # --- Rota Principal para servir o HTML ---
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return send_from_directory('.', 'index.html')
+
 
 
 # --- API para Usuários (Login/Registro) ---
