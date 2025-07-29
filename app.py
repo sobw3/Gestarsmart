@@ -14,8 +14,7 @@ def get_db_connection():
 # --- Rota Principal para servir o HTML ---
 @app.route('/')
 def index():
-    from flask import render_template
-return render_template('index.html')
+    return render_template('index.html')
 
 
 # --- API para Usuários (Login/Registro) ---
